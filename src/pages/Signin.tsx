@@ -1,23 +1,20 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Container, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useUserAuth } from "../context/UserAuthContext";
+import { useUserAuth, userAuthContext } from "../context/UserAuthContext";
 
-export const Signin = () => {
+export const Signin: FC = () => {
   const navigate = useNavigate();
-  const { logIn } = useUserAuth();
+  const { logIn } = useUserAuth() as userAuthContext;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = await logIn(email, password);
-      console.log(result);
       navigate("/");
-    } catch (err) {
-      console.log(err.message);
-    }
+    } catch (err: any) {}
   };
 
   return (

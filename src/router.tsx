@@ -1,10 +1,12 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Signin } from "./pages/Signin";
 import { Signup } from "./pages/Signup";
 import { Profile } from "./pages/Profile";
-import { ProtectedRoutes } from "./components/ProtectedRoutes";
-import { PublicRoutes } from "./components/PublicRoutes";
+import { PostPage } from "./pages/PostPage";
+import { ProtectedRoutes } from "./components/Routes/ProtectedRoutes";
+import { PublicRoutes } from "./components/Routes/PublicRoutes";
+import { PageNotFound } from "./pages/PageNotFound";
 
 export let router = createBrowserRouter([
   {
@@ -18,15 +20,21 @@ export let router = createBrowserRouter([
         },
       },
       {
-        path: "profile",
+        path: "profile/:id",
         Component() {
           return <Profile />;
         },
       },
       {
+        path: "post/:id",
+        Component() {
+          return <PostPage />;
+        },
+      },
+      {
         path: "*",
         Component() {
-          return <p>404</p>;
+          return <PageNotFound />;
         },
       },
     ],
