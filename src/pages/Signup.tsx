@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, TextField, Button } from "@mui/material";
-import { useUserAuth } from "../context/UserAuthContext";
+import { useUserAuth, userAuthContext } from "../context/UserAuthContext";
 
-export const Signup = () => {
+export const Signup: FC = () => {
   const navigate = useNavigate();
-  const { signUp } = useUserAuth();
+  const { signUp } = useUserAuth() as userAuthContext;
   const [nameErr, setNameErr] = useState("");
   const [emailErr, setEmailErr] = useState("");
   const [passErr, setPassErr] = useState("");
@@ -16,7 +16,9 @@ export const Signup = () => {
   const emailRe =
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-  const handleOnChangeName = (e) => {
+  const handleOnChangeName = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { value } = e.target;
     setName(value);
     if (value.length >= 2) {
@@ -24,7 +26,9 @@ export const Signup = () => {
     }
   };
 
-  const handleOnChangeEmail = (e) => {
+  const handleOnChangeEmail = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { value } = e.target;
     setEmail(value);
     if (value.toLowerCase().match(emailRe)) {
@@ -32,7 +36,9 @@ export const Signup = () => {
     }
   };
 
-  const handleOnChangePass = (e) => {
+  const handleOnChangePass = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { value } = e.target;
     setPassword(value);
     if (value.length >= 6) {
@@ -67,7 +73,7 @@ export const Signup = () => {
     return isValid;
   };
 
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = await isFormValid();
@@ -75,9 +81,7 @@ export const Signup = () => {
         await signUp(email, password, name);
         navigate("/profile");
       }
-    } catch (err) {
-      console.log(err.message);
-    }
+    } catch (err: any) {}
   };
 
   return (
@@ -87,7 +91,7 @@ export const Signup = () => {
         <div>
           <TextField
             required
-            error={nameErr}
+            error={Boolean(nameErr)}
             helperText={nameErr}
             label="Name"
             id="outlined-size-small"
@@ -100,7 +104,7 @@ export const Signup = () => {
         <div>
           <TextField
             required
-            error={emailErr}
+            error={Boolean(nameErr)}
             helperText={emailErr}
             label="Email"
             id="outlined-size-small"
@@ -113,7 +117,7 @@ export const Signup = () => {
         <div>
           <TextField
             required
-            error={passErr}
+            error={Boolean(nameErr)}
             helperText={passErr}
             label="Password"
             id="outlined-size-small"
