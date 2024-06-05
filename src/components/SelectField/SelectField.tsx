@@ -3,7 +3,6 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
   SelectChangeEvent,
 } from "@mui/material";
 
@@ -24,8 +23,15 @@ export const SelectField: FC<Props> = ({ getValue, values }) => {
   };
 
   return (
-    <FormControl fullWidth>
-      <Select value={value} onChange={handleChange}>
+    <FormControl sx={{ boxShadow: 1 }} fullWidth>
+      <Select
+        sx={{
+          boxShadow: "none",
+          ".MuiOutlinedInput-notchedOutline": { border: 0 },
+        }}
+        value={value}
+        onChange={handleChange}
+      >
         {values.map(({ value, title }) => {
           return (
             <MenuItem key={value} value={value}>
@@ -33,9 +39,6 @@ export const SelectField: FC<Props> = ({ getValue, values }) => {
             </MenuItem>
           );
         })}
-        {/* <MenuItem value={1}>1</MenuItem>
-        <MenuItem value={3}>3</MenuItem>
-        <MenuItem value={0}>All</MenuItem> */}
       </Select>
     </FormControl>
   );

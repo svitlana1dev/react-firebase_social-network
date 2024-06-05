@@ -10,8 +10,8 @@ export const GET_PROFILE = gql`
       photoURL
       posts {
         id
-        # authorUid
-        # authorName
+        authorUid
+        authorName
         title
         description
         photoURL

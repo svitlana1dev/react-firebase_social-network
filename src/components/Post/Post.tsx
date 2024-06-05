@@ -22,7 +22,7 @@ type getComments = {
   getComments: Comment[];
 };
 
-export const Post: FC<Props> = ({ post, errorPost, loadingPost, isSingle }) => {
+export const Post: FC<Props> = ({ post, errorPost, loadingPost }) => {
   const [newAnswer, setNewAnswer] = useState<Comment | null>(null);
   const { loading, data } = useQuery<getComments>(GET_COMMENTS, {
     variables: {

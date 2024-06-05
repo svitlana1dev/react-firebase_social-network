@@ -32,12 +32,8 @@ export const PostComments: FC<Props> = ({
   const [showAddAnswer, setShowAddAnswer] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [replyToComment, { loading }] = useMutation(REPLY_TO_COMMENT);
-  const [
-    deleteComment,
-    { loading: deleting, data: deleted, error: errorDelete },
-  ] = useMutation(DELETE_COMMENT);
-  const [editComment, { loading: editing, data: edited, error: errorEdit }] =
-    useMutation(EDIT_COMMENT);
+  const [deleteComment, {}] = useMutation(DELETE_COMMENT);
+  const [editComment, { loading: editing }] = useMutation(EDIT_COMMENT);
 
   const handleAddAnswer = async (value: string) => {
     try {
@@ -97,7 +93,7 @@ export const PostComments: FC<Props> = ({
           {!showEdit && (
             <p style={{ textAlign: "left", fontSize: "12px" }}>{content}</p>
           )}
-          <p style={{ textAlign: "left", color: "gray", fontSize: "10px" }}>
+          <p style={{ textAlign: "left", color: "gray", fontSize: "8px" }}>
             {comment.updatedAt
               ? `Edited ${moment(comment.updatedAt).format("LLL")}`
               : moment(comment.createdAt).format("LLL")}

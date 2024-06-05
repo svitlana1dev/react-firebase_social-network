@@ -20,9 +20,8 @@ export const Profile: FC = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [newPost, setNewPost] = useState<any>(null);
   const [showCreating, setShowCreating] = useState(false);
-  const [getProfile, { data, error, loading }] = useLazyQuery(GET_PROFILE);
-  const [deleteUser, { loading: loadingDel, data: dataDel, error: errorDel }] =
-    useMutation(DELETE_USER);
+  const [getProfile, { error, loading }] = useLazyQuery(GET_PROFILE);
+  const [deleteUser, {}] = useMutation(DELETE_USER);
 
   const getNewProfile = (profile: User) => {
     setProfile(profile);
@@ -98,7 +97,11 @@ export const Profile: FC = () => {
           </Box>
 
           {user.uid === profile.id && (
-            <Button onClick={() => setShowCreating(true)} variant="contained">
+            <Button
+              onClick={() => setShowCreating(true)}
+              variant="contained"
+              sx={{ mb: 4 }}
+            >
               Add post
             </Button>
           )}

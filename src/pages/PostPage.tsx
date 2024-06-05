@@ -1,9 +1,7 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Container } from "@mui/material";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import { useUserAuth, userAuthContext } from "../context/UserAuthContext";
 import { Post } from "../components/Post/Post";
 
 const GET_POST = gql`

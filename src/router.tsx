@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home";
-import { Signin } from "./pages/Signin";
-import { Signup } from "./pages/Signup";
+import { SignUpOrIn } from "./pages/SignUpOrIn";
 import { Profile } from "./pages/Profile";
 import { PostPage } from "./pages/PostPage";
 import { ProtectedRoutes } from "./components/Routes/ProtectedRoutes";
@@ -44,7 +43,7 @@ export let router = createBrowserRouter([
     Component() {
       return (
         <PublicRoutes>
-          <Signup />
+          <SignUpOrIn signup />
         </PublicRoutes>
       );
     },
@@ -54,7 +53,7 @@ export let router = createBrowserRouter([
     Component() {
       return (
         <PublicRoutes>
-          <Signin />
+          <SignUpOrIn signin />
         </PublicRoutes>
       );
     },

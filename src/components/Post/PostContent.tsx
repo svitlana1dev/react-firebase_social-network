@@ -14,7 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import { AccountCircle } from "@mui/icons-material";
-import { Box, FormControl, IconButton, TextField } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { useUserAuth, userAuthContext } from "../../context/UserAuthContext";
 import { DELETE_POST, DISLIKE_POST, LIKE_POST } from "../../graphql/mutations";
 import { AuthorActions } from "../Buttons/AuthorActions";
@@ -57,7 +57,7 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
   const [dislikedPost, { loading: loadingDislikeData }] =
     useMutation(DISLIKE_POST);
 
-  const [deletePost, { loading: deletingPost }] = useMutation(DELETE_POST);
+  const [deletePost, {}] = useMutation(DELETE_POST);
 
   useEffect(() => {
     if (post) {
@@ -145,11 +145,17 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
               />
             )
           }
-          title={post.authorName}
+          title={post.authorName || "me"}
           subheader={
-            post.updatedAt
-              ? `Edited ${moment(post.updatedAt).format("LLL")}`
-              : moment(post.createdAt).format("LLL")
+            post.updatedAt ? (
+              <Typography sx={{ fontSize: "8px" }}>{`Edited ${moment(
+                post.updatedAt
+              ).format("LLL")}`}</Typography>
+            ) : (
+              <Typography sx={{ fontSize: "8px" }}>
+                {moment(post.createdAt).format("LLL")}
+              </Typography>
+            )
           }
         />
       </PostNavLink>

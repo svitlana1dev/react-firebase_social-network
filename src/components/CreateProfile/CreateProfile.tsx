@@ -30,7 +30,7 @@ export const CreateProfile: FC<Props> = ({
   const { user } = useUserAuth() as userAuthContext;
   const [secondName, setSecondName] = useState(currentName);
   const [bio, setBio] = useState(currentBio);
-  const [createProfile, { data, error, loading }] = useMutation(CREATE_PROFILE);
+  const [createProfile, { loading }] = useMutation(CREATE_PROFILE);
   const [editProfile, { loading: editing }] = useMutation(EDIT_PROFILE);
   const btnTitle = edit ? "Edit" : "Create profile";
 

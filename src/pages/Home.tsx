@@ -1,17 +1,17 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { GET_ALL_POSTS } from "../graphql/queries";
-import { Box, Button, Card, Grid, TextField } from "@mui/material";
+import { Box, Button, Card, Grid } from "@mui/material";
 import { PostContent } from "../components/Post/PostContent";
 import { SelectField } from "../components/SelectField/SelectField";
 import { PostSkeleton } from "../components/Skeleton/PostSkeleton";
+import { Search } from "../components/Search/Search";
 
 export const Home: FC = () => {
-  const [searchValue, setSearchValue] = useState("");
   const [limit, setLimit] = useState(1);
   const [offset, setOffset] = useState(0);
   const [allData, setAllData] = useState<any[]>([]);
-  const [getAllPosts, { data, error, loading }] = useLazyQuery(GET_ALL_POSTS);
+  const [getAllPosts, { loading }] = useLazyQuery(GET_ALL_POSTS);
 
   const limits = [
     { value: "1", title: "1" },
@@ -36,8 +36,9 @@ export const Home: FC = () => {
 
       const { posts } = data.getAllPosts || [];
 
-      if (searchValue.length > 1) {
+      if (querySearch.length > 1) {
         setAllData(posts);
+        return;
       }
 
       if (posts.length > 0) {
@@ -47,28 +48,21 @@ export const Home: FC = () => {
   };
 
   useEffect(() => {
-    handleGetAllPosts(searchValue, limit, offset);
+    handleGetAllPosts("", limit, offset);
   }, []);
 
   const handleGetLimit = (newLimit: string) => {
-    handleGetAllPosts(searchValue, +newLimit, offset);
+    handleGetAllPosts("", +newLimit, offset);
     setLimit(+newLimit);
   };
 
   const handleShowMore = () => {
-    handleGetAllPosts(searchValue, limit, offset + limit);
+    handleGetAllPosts("", limit, offset + limit);
     setOffset((prev) => prev + limit);
   };
 
-  const handleChangeSearch = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setSearchValue(e.target.value);
-  };
-
-  const handleSearch = () => {
-    handleGetAllPosts(searchValue, limit, offset);
-    setSearchValue("");
+  const handleSearch = (searchQuery: string) => {
+    handleGetAllPosts(searchQuery, limit, offset);
   };
 
   return (
@@ -78,18 +72,7 @@ export const Home: FC = () => {
           <SelectField getValue={handleGetLimit} values={limits} />
         </Box>
 
-        <Box display={"flex"}>
-          <TextField
-            multiline
-            rows={1}
-            value={searchValue}
-            onChange={handleChangeSearch}
-            variant="outlined"
-          />
-          <Button variant="contained" onClick={handleSearch}>
-            Search
-          </Button>
-        </Box>
+        <Search onSearch={handleSearch} />
       </Box>
 
       <Grid container spacing={2} mt={3}>

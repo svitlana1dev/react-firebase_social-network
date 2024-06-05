@@ -14,6 +14,7 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  UserCredential,
 } from "firebase/auth";
 import { User as FirebaseUser } from "firebase/auth";
 import { auth } from "../firebase";
@@ -21,10 +22,14 @@ import { auth } from "../firebase";
 export type userAuthContext = {
   // user: FirebaseUser | {};
   user: any;
-  logIn: (email: string, password: string) => any;
-  signUp: (email: string, password: string, displayName: string) => any;
-  logOut: () => any;
-  googleSignIn: () => any;
+  logIn: (email: string, password: string) => Promise<UserCredential>;
+  signUp: (
+    email: string,
+    password: string,
+    displayName: string
+  ) => Promise<void>;
+  logOut: () => Promise<void>;
+  googleSignIn: () => Promise<void>;
 };
 
 const userAuthContext = createContext<userAuthContext | null>(null);
@@ -39,6 +44,7 @@ export const UserAuthContextProvider: FC<Props> = ({ children }) => {
   const logIn = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
+
   const signUp = async (
     email: string,
     password: string,
@@ -55,12 +61,16 @@ export const UserAuthContextProvider: FC<Props> = ({ children }) => {
       });
     } catch (err) {}
   };
+
   const logOut = () => {
     return signOut(auth);
   };
-  const googleSignIn = () => {
+
+  const googleSignIn = async () => {
     const googleAuthProvider = new GoogleAuthProvider();
-    return signInWithPopup(auth, googleAuthProvider);
+    try {
+      await signInWithPopup(auth, googleAuthProvider);
+    } catch (err) {}
   };
 
   useEffect(() => {

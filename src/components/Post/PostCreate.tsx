@@ -26,9 +26,8 @@ export const PostCreate: FC<Props> = ({
   const { id } = useParams();
   const [title, setTitle] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
-  const [createPost, { data, error, loading }] = useMutation(CREATE_POST);
-  const [editPost, { data: dataPost, error: errorPost, loading: loadingPost }] =
-    useMutation(EDIT_POST);
+  const [createPost, { loading }] = useMutation(CREATE_POST);
+  const [editPost, {}] = useMutation(EDIT_POST);
 
   const handleCreatePost = async () => {
     try {
