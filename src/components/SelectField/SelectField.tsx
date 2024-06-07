@@ -23,12 +23,13 @@ export const SelectField: FC<Props> = ({ getValue, values }) => {
   };
 
   return (
-    <FormControl sx={{ boxShadow: 1 }} fullWidth>
+    <FormControl sx={{ boxShadow: 1, borderRadius: "4px" }} fullWidth>
       <Select
         sx={{
           boxShadow: "none",
           ".MuiOutlinedInput-notchedOutline": { border: 0 },
         }}
+        size={"small"}
         value={value}
         onChange={handleChange}
       >

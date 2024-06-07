@@ -3,25 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { Container } from "@mui/material";
 import { Post } from "../components/Post/Post";
-
-const GET_POST = gql`
-  query GetPost($id: String!) {
-    getPostById(postId: $id) {
-      id
-      authorUid
-      authorName
-      authorPhoto
-      title
-      description
-      createdAt
-      updatedAt
-      photoURL
-      like
-      dislike
-      commentsCount
-    }
-  }
-`;
+import { GET_POST } from "../graphql/queries";
 
 export const PostPage: FC = () => {
   const { id } = useParams();

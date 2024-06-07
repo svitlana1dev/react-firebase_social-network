@@ -29,10 +29,23 @@ export const DELETE_USER = gql`
     deleteUser
   }
 `;
-
+// type FileMetadata {
+//   lastModified: Int
+//   lastModifiedDate: String
+//   name: String
+//   size: Int
+//   type: String
+//   webkitRelativePath: String
+// }
 export const CREATE_POST = gql`
-  mutation CreatePost($title: String!, $description: String!) {
-    createPost(input: { title: $title, description: $description }) {
+  mutation CreatePost(
+    $title: String!
+    $description: String!
+    $photoURL: String
+  ) {
+    createPost(
+      input: { title: $title, description: $description, photoURL: $photoURL }
+    ) {
       id
       authorUid
       authorName
@@ -40,6 +53,7 @@ export const CREATE_POST = gql`
       description
       createdAt
       authorPhoto
+      photoURL
     }
   }
 `;
@@ -121,5 +135,14 @@ export const DELETE_COMMENT = gql`
 export const EDIT_COMMENT = gql`
   mutation EditComment($content: String!, $commentId: String) {
     editComment(postInput: { content: $content, commentId: $commentId })
+  }
+`;
+
+export const UPLOAD_FILE = gql`
+  mutation UploadFile($file: Upload!) {
+    uploadFile(file: { file: $file })
+    # id
+    # url
+    # }
   }
 `;

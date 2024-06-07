@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import { NavLink } from "react-router-dom";
 import moment from "moment";
 import CardHeader from "@mui/material/CardHeader";
@@ -19,6 +19,7 @@ import { useUserAuth, userAuthContext } from "../../context/UserAuthContext";
 import { DELETE_POST, DISLIKE_POST, LIKE_POST } from "../../graphql/mutations";
 import { AuthorActions } from "../Buttons/AuthorActions";
 import { PostCreate } from "./PostCreate";
+// import { GET_FILE } from "../../graphql/queries";
 
 type Props = {
   post: any;
@@ -74,7 +75,7 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
       setUnfavoriteCount(post.dislike?.length || 0);
     }
   }, [post]);
-
+  console.log(post);
   const handleFavorite = async () => {
     setFavorite((prev) => !prev);
     if (unfavorite) {
@@ -115,7 +116,7 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
   const getNewPost = (value: any) => {
     setShowEdit(false);
   };
-
+  console.log(post);
   return (
     <>
       <PostNavLink
@@ -161,11 +162,11 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
       </PostNavLink>
 
       <PostNavLink to={`/post/${post.id}`}>
-        {post.photoUrl && (
+        {post.photoURL && (
           <CardMedia
             component="img"
             height="auto"
-            image={post.photoUrl}
+            image={post.photoURL}
             alt={post.title}
           />
         )}

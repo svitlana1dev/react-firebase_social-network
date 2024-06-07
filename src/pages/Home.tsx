@@ -67,7 +67,11 @@ export const Home: FC = () => {
 
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"}>
+      <Box
+        display={"flex"}
+        justifyContent={"space-between"}
+        sx={{ maxHeight: "40px" }}
+      >
         <Box sx={{ maxWidth: 100 }}>
           <SelectField getValue={handleGetLimit} values={limits} />
         </Box>

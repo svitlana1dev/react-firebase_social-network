@@ -1,5 +1,24 @@
 import { gql } from "@apollo/client";
 
+export const GET_POST = gql`
+  query GetPost($id: String!) {
+    getPostById(postId: $id) {
+      id
+      authorUid
+      authorName
+      authorPhoto
+      title
+      description
+      createdAt
+      updatedAt
+      photoURL
+      like
+      dislike
+      commentsCount
+    }
+  }
+`;
+
 export const GET_PROFILE = gql`
   query GetProfile($id: String!) {
     getProfile(id: $id) {
@@ -22,6 +41,12 @@ export const GET_PROFILE = gql`
         commentsCount
       }
     }
+  }
+`;
+
+export const GET_FILE = gql`
+  query GetFile($fileName: String!) {
+    getFile(fileName: $fileName)
   }
 `;
 

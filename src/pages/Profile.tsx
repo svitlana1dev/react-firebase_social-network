@@ -28,7 +28,7 @@ export const Profile: FC = () => {
 
     showEdit && setShowEdit(false);
   };
-
+  console.log(user);
   useEffect(() => {
     getProfile({
       variables: {
