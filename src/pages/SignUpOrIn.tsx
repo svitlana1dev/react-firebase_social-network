@@ -119,7 +119,6 @@ export const SignUpOrIn: FC<Props> = ({ signup, signin }) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    console.log("sdsda");
     googleSignIn();
   };
 

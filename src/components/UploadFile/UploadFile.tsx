@@ -36,7 +36,7 @@ export const UploadFile: FC<Props> = ({ onHandleUpload, loading }) => {
       role={undefined}
       variant="contained"
       tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
+      startIcon={!loading && <CloudUploadIcon />}
     >
       {loading ? <CircularProgress color="inherit" size={25} /> : "Upload file"}
       <VisuallyHiddenInput type="file" onChange={handleFileChange} />

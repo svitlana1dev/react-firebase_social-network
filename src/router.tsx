@@ -6,6 +6,7 @@ import { PostPage } from "./pages/PostPage";
 import { ProtectedRoutes } from "./components/Routes/ProtectedRoutes";
 import { PublicRoutes } from "./components/Routes/PublicRoutes";
 import { PageNotFound } from "./pages/PageNotFound";
+import { UserSettings } from "./pages/UserSettings";
 
 export let router = createBrowserRouter([
   {
@@ -28,6 +29,12 @@ export let router = createBrowserRouter([
         path: "post/:id",
         Component() {
           return <PostPage />;
+        },
+      },
+      {
+        path: "settings",
+        Component() {
+          return <UserSettings />;
         },
       },
       {

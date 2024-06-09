@@ -9,7 +9,13 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { CREATE_POST, EDIT_POST } from "../../graphql/mutations";
 import { UploadFile } from "../UploadFile/UploadFile";
 import { storage } from "../../firebase";
@@ -17,6 +23,7 @@ import { storage } from "../../firebase";
 type Props = {
   setNewPost: (arg: any) => void;
   edit?: boolean;
+  currentImg?: string;
   currentTitle?: string;
   currentDescription?: string;
 };
@@ -32,13 +39,14 @@ const toBase64 = (file: any) =>
 export const PostCreate: FC<Props> = ({
   setNewPost,
   edit,
+  currentImg = null,
   currentTitle = "",
   currentDescription = "",
 }) => {
   const { id } = useParams();
   const [title, setTitle] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(currentImg);
   const [imageLoading, setImageUrlLoading] = useState(false);
   const [createPost, { loading }] = useMutation(CREATE_POST);
 
@@ -64,7 +72,6 @@ export const PostCreate: FC<Props> = ({
             photoURL: imageUrl,
           },
         });
-        console.log(data);
 
         (await !loading) && setNewPost(data.createPost);
       }
@@ -97,6 +104,22 @@ export const PostCreate: FC<Props> = ({
     } catch (err) {}
   };
 
+  const handleDeleteFile = () => {
+    if (imageUrl) {
+      const httpsReference = ref(storage, imageUrl);
+
+      deleteObject(httpsReference)
+        .then(() => {
+          setTimeout(() => {
+            setImageUrl(null);
+          }, 0);
+        })
+        .catch(() => {});
+
+      setImageUrl("");
+    }
+  };
+
   return (
     <Box
       display={"flex"}
@@ -105,7 +128,18 @@ export const PostCreate: FC<Props> = ({
       gap={2}
       mt={3}
     >
-      <UploadFile onHandleUpload={handleUpload} loading={imageLoading} />
+      {!imageUrl ? (
+        <UploadFile onHandleUpload={handleUpload} loading={imageLoading} />
+      ) : (
+        <Button
+          onClick={handleDeleteFile}
+          variant="outlined"
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+      )}
+
       {imageUrl && (
         <CardMedia
           component="img"
@@ -137,7 +171,11 @@ export const PostCreate: FC<Props> = ({
         />
       </FormControl>
 
-      <Button variant="contained" onClick={handleCreatePost} disabled={loading}>
+      <Button
+        variant="contained"
+        onClick={handleCreatePost}
+        disabled={loading || imageLoading}
+      >
         {loading ? <CircularProgress color="inherit" size={25} /> : "Save"}
       </Button>
     </Box>

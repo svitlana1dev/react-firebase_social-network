@@ -1,6 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from "react";
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { NavLink } from "react-router-dom";
+import { deleteObject, ref } from "firebase/storage";
 import moment from "moment";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -15,11 +16,11 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import { AccountCircle } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
+import { storage } from "../../firebase";
 import { useUserAuth, userAuthContext } from "../../context/UserAuthContext";
 import { DELETE_POST, DISLIKE_POST, LIKE_POST } from "../../graphql/mutations";
 import { AuthorActions } from "../Buttons/AuthorActions";
 import { PostCreate } from "./PostCreate";
-// import { GET_FILE } from "../../graphql/queries";
 
 type Props = {
   post: any;
@@ -106,7 +107,14 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
   };
 
   const handleDeletePost = async () => {
-    return await deletePost({ variables: { id: post.id } });
+    try {
+      await deletePost({ variables: { id: post.id } });
+
+      if (post.hasOwnProperty("photoURL")) {
+        const httpsReference = ref(storage, post.photoURL);
+        deleteObject(httpsReference);
+      }
+    } catch (err) {}
   };
 
   const handleEditPost = () => {
@@ -160,9 +168,8 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
           }
         />
       </PostNavLink>
-
       <PostNavLink to={`/post/${post.id}`}>
-        {post.photoURL && (
+        {post.photoURL && !showEdit && (
           <CardMedia
             component="img"
             height="auto"
@@ -174,6 +181,7 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
         {showEdit ? (
           <PostCreate
             edit
+            currentImg={post.photoURL}
             currentTitle={post.title}
             currentDescription={post.description}
             setNewPost={getNewPost}
