@@ -76,7 +76,7 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
       setUnfavoriteCount(post.dislike?.length || 0);
     }
   }, [post]);
-  console.log(post);
+
   const handleFavorite = async () => {
     setFavorite((prev) => !prev);
     if (unfavorite) {
@@ -124,7 +124,7 @@ export const PostContent: FC<Props> = ({ post, onProfile, isSingle }) => {
   const getNewPost = (value: any) => {
     setShowEdit(false);
   };
-  console.log(post);
+
   return (
     <>
       <PostNavLink

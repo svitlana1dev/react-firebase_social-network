@@ -1,9 +1,20 @@
 import { FC, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useParams } from "react-router-dom";
-import { Avatar, Box, Button, Card, Grid, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Grid,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
-import { User } from "firebase/auth";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { User, updateProfile } from "firebase/auth";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { storage } from "../firebase";
 import { AuthorActions } from "../components/Buttons/AuthorActions";
 import { PostContent } from "../components/Post/PostContent";
 import { ProfileSkeleton } from "../components/Skeleton/ProfileSkeleton";
@@ -13,10 +24,19 @@ import { DELETE_USER } from "../graphql/mutations";
 import { useUserAuth, userAuthContext } from "../context/UserAuthContext";
 import { PostCreate } from "../components/Post/PostCreate";
 
+const toBase64 = (file: any) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+
 export const Profile: FC = () => {
   const { id } = useParams();
   const { user } = useUserAuth() as userAuthContext;
   const [profile, setProfile] = useState<any>(null);
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const [showEdit, setShowEdit] = useState(false);
   const [newPost, setNewPost] = useState<any>(null);
   const [showCreating, setShowCreating] = useState(false);
@@ -28,13 +48,18 @@ export const Profile: FC = () => {
 
     showEdit && setShowEdit(false);
   };
-  console.log(user);
+
   useEffect(() => {
     getProfile({
       variables: {
         id,
       },
-    }).then(({ data }) => data?.getProfile && setProfile(data.getProfile));
+    }).then(({ data }) => {
+      if (data?.getProfile) {
+        setProfile(data.getProfile);
+        setProfilePhoto(data.getProfile.photoURL);
+      }
+    });
   }, []);
 
   const handleDeleteUser = async () => {
@@ -50,6 +75,45 @@ export const Profile: FC = () => {
     setShowCreating(false);
   };
 
+  const handleChangePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const { name, type } = file;
+
+      const storageRef = ref(storage, name);
+
+      try {
+        const base64 = await toBase64(file);
+
+        if (typeof base64 === "string") {
+          const metadata = {
+            contentType: type,
+          };
+
+          const strImage = base64.replace(/^data:image\/[a-z]+;base64,/, "");
+          const snapshot = await uploadString(
+            storageRef,
+            strImage,
+            "base64",
+            metadata
+          );
+
+          let newUrl: string;
+          await getDownloadURL(snapshot.ref).then((url) => {
+            newUrl = url;
+            updateProfile(user, {
+              photoURL: url,
+            })
+              .then(() => {
+                setProfilePhoto(newUrl);
+              })
+              .catch(() => {});
+          });
+        }
+      } catch (err) {}
+    }
+  };
+  console.log(user);
   return (
     <>
       {loading && <ProfileSkeleton />}
@@ -62,15 +126,41 @@ export const Profile: FC = () => {
             mb={5}
           >
             <Box>
-              <Box sx={{ width: 56, height: 56 }}>
-                {profile.photoURL ? (
+              <Box display={"flex"} sx={{ width: 56, height: 56 }}>
+                {profilePhoto ? (
                   <Avatar
                     alt={profile.firstName}
-                    src={profile.photoURL}
+                    src={profilePhoto}
                     sx={{ width: "100%", height: "100%" }}
                   />
                 ) : (
                   <AccountCircle sx={{ width: "100%", height: "100%" }} />
+                )}
+                {user.uid === profile.id && (
+                  <Button
+                    style={{
+                      background: "transparent",
+                      color: "#000",
+                      boxShadow: "none",
+                      minWidth: "20px",
+                      height: "30px",
+                    }}
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                  >
+                    {loading ? (
+                      <CircularProgress color="inherit" size={25} />
+                    ) : (
+                      <AddAPhotoIcon />
+                    )}
+                    <input
+                      style={{ height: "1", width: "1" }}
+                      type="file"
+                      onChange={handleChangePhoto}
+                    />
+                  </Button>
                 )}
               </Box>
 
