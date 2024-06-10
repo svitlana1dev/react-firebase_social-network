@@ -113,7 +113,7 @@ export const Profile: FC = () => {
       } catch (err) {}
     }
   };
-  console.log(user);
+
   return (
     <>
       {loading && <ProfileSkeleton />}
