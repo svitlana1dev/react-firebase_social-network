@@ -31,6 +31,7 @@ export const GET_PROFILE = gql`
         id
         authorUid
         authorName
+        authorPhoto
         title
         description
         photoURL
@@ -59,6 +60,7 @@ export const GET_ALL_POSTS = gql`
         id
         authorUid
         authorName
+        authorPhoto
         title
         description
         createdAt

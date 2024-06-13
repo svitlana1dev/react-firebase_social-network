@@ -60,6 +60,7 @@ export const PostCreate: FC<Props> = ({
             id: id,
             title: title,
             description: description,
+            photoURL: imageUrl && imageUrl?.length > 0 ? imageUrl : null,
           },
         });
 
