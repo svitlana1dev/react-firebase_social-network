@@ -21,29 +21,27 @@ export const Home: FC = () => {
 
   const handleGetAllPosts = async (
     querySearch: string,
-    limit: number,
-    offset: number
+    limitArg: number,
+    offsetArg: number
   ) => {
     try {
       const { data } = await getAllPosts({
         variables: {
           querySearch,
-          limit,
-          offset,
+          limit: limitArg,
+          offset: offsetArg,
         },
         fetchPolicy: "network-only",
       });
 
       const { posts } = data.getAllPosts || [];
 
-      if (querySearch.length > 1) {
-        setAllData(posts);
+      if (offsetArg > offset) {
+        setAllData((prev) => [...prev, ...posts]);
         return;
       }
 
-      if (posts.length > 0) {
-        setAllData((prev) => [...prev, ...posts]);
-      }
+      setAllData(posts);
     } catch (err) {}
   };
 
@@ -52,7 +50,7 @@ export const Home: FC = () => {
   }, []);
 
   const handleGetLimit = (newLimit: string) => {
-    handleGetAllPosts("", +newLimit, offset);
+    handleGetAllPosts("", +newLimit, 0);
     setLimit(+newLimit);
   };
 
@@ -62,7 +60,7 @@ export const Home: FC = () => {
   };
 
   const handleSearch = (searchQuery: string) => {
-    handleGetAllPosts(searchQuery, limit, offset);
+    handleGetAllPosts(searchQuery, limit, 0);
   };
 
   return (
